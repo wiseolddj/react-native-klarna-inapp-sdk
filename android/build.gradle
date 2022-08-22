@@ -51,11 +51,17 @@ repositories {
     maven {
         url 'https://x.klarnacdn.net/mobile-sdk/'
     }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     implementation "com.facebook.react:react-native:${safeExtGet('reactnativeVersion', '+')}"
-    implementation 'com.klarna.mobile:sdk:2.2.0'
+//    implementation 'com.klarna.mobile:sdk:2.2.0'
+    implementation(name:'klarna-mobile-sdk-full-release', ext:'aar')
+    
+    implementation "androidx.annotation:annotation:1.4.0"
 
     testImplementation "junit:junit:4.13"
     testImplementation 'androidx.test:core:1.2.0'
