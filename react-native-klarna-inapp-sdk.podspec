@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/Sources/**/*.{h,m}"
   s.requires_arc = true
+  s.vendored_frameworks = 'ios/XCFramework/KlarnaMobileSDK.xcframework'
 
   s.test_spec 'KlarnaInAppSDKTests' do |test_spec|
     test_spec.source_files = 'ios/Tests/**/*.{h,m}'
@@ -25,7 +26,7 @@ Pod::Spec.new do |s|
   end
 
   s.dependency "React"
-  s.dependency 'KlarnaMobileSDK', '2.1.5'
+  # s.dependency 'KlarnaMobileSDK', '2.1.5'
   # s.dependency "..."
 
 end

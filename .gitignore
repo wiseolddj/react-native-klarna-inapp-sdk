@@ -51,3 +51,4 @@ fastlane/report.xml
 
 # local sdk
 android/libs/
+ios/XCFramework/
