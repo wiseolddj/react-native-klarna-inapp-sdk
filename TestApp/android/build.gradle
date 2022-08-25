@@ -32,5 +32,8 @@ allprojects {
         maven {
             url 'https://x.klarnacdn.net/mobile-sdk/'
         }
+        flatDir {
+            dirs '../../../android/libs'
+        }
     }
 }
