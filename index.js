@@ -55,6 +55,9 @@ class KlarnaReactPaymentView extends Component {
             [sessionData || null]
         )
     }
+    componentWillUnmount(){
+        console.warn("Component will unmount")
+    }
 }
 
 KlarnaReactPaymentView.propTypes = {
@@ -65,6 +68,7 @@ KlarnaReactPaymentView.propTypes = {
     onReauthorized: PropTypes.func,
     onFinalized: PropTypes.func,
     onError: PropTypes.func,
+    
 }
 
 const KlarnaPaymentView = requireNativeComponent('KlarnaPaymentView', KlarnaReactPaymentView);
