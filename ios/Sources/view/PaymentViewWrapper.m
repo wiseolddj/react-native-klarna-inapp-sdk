@@ -125,25 +125,6 @@
 
 - (void) dealloc {
     RCTLogWarn(@"==================================================\n K- View at %p dealloced.", &self);
-    
-//    void *addr[2];
-//    int nframes = backtrace(addr, sizeof(addr)/sizeof(*addr));
-//    if (nframes > 1) {
-//        char **syms = backtrace_symbols(addr, nframes);
-//        RCTLogWarn(@"%s: caller: %s", __func__, syms[1]);
-//        free(syms);
-//    } else {
-//        RCTLogWarn(@"%s: *** Failed to generate backtrace.", __func__);
-//    }
-//
-//    NSArray *syms = [NSThread  callStackSymbols];
-//    if ([syms count] > 1) {
-//        for (int i = 0; i < [syms count]; i++) {
-//            RCTLogWarn(@"<%@ %p> %@ - caller: %@ ", [self class], self, NSStringFromSelector(_cmd), [syms objectAtIndex:i]);
-//        }
-//    } else {
-//        RCTLogWarn(@"<%@ %p> %@", [self class], self, NSStringFromSelector(_cmd));
-//    }
 }
 
 - (void) setCategory:(NSString *)category {
@@ -157,53 +138,13 @@
     }
 }
 
-
-
-- (void) didMoveToWindow_swizzle {
-    RCTLogWarn(@"Did move %@ to window %@", self, self.window);
-
-    [self didMoveToWindow_swizzle];
-    
-}
-
 - (void) initializeActualPaymentView {
     
     [KlarnaMobileSDKCommon setLoggingLevel: KlarnaLoggingLevelVerbose];
     self.actualPaymentView = [[KlarnaPaymentViewDebug alloc] initWithCategory:self.category eventListener:self];
     self.actualPaymentView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    
-//    [self.actualPaymentView setValue: ^void (KlarnaDebugEvent* event) {
-//        RCTLogWarn([event debugDescription]);
-//    }];
-
-//
     [self addSubview:self.actualPaymentView];
-
-//    Class osLogClass = objc_getClass("OS_os_log");
-//
-//    unsigned int methodCount = 0;
-//       Method *methods = class_copyMethodList(osLogClass, &methodCount);
-//
-//       NSLog(@"Found %d methods on '%s'\n", methodCount, class_getName(osLogClass));
-//
-//       for (unsigned int i = 0; i < methodCount; i++) {
-//           Method method = methods[i];
-//
-//           printf("\t'%s' has method named '%s' of encoding '%s'\n",
-//                  class_getName(osLogClass),
-//                  sel_getName(method_getName(method)),
-//                  method_getTypeEncoding(method));
-//
-//           /**
-//            *  Or do whatever you need here...
-//            */
-//       }
-//
-//       free(methods);
-//    for(i=0;i<ic;i++) {
-//        NSLog(@"Method no #%d: %s", i, sel_getName(method_getName(mlist[i])));
-//    }
     
     [NSLayoutConstraint activateConstraints:[[NSArray alloc] initWithObjects:
         [self.actualPaymentView.topAnchor constraintEqualToAnchor:self.topAnchor],
@@ -211,8 +152,6 @@
         [self.actualPaymentView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [self.actualPaymentView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor], nil
     ]];
-    
-
 }
 
 - (void)layoutSubviews {
