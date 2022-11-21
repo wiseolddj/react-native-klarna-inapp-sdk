@@ -68,7 +68,6 @@ KlarnaReactPaymentView.propTypes = {
     onReauthorized: PropTypes.func,
     onFinalized: PropTypes.func,
     onError: PropTypes.func,
-    
 }
 
 const KlarnaPaymentView = requireNativeComponent('KlarnaPaymentView', KlarnaReactPaymentView);

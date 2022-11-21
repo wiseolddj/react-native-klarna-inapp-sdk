@@ -19,6 +19,8 @@
 @end
 
 
+#pragma mark - Intercept UIView Events
+
 @implementation UIView (MoveToWindow)
 
 + (void)load {
@@ -35,44 +37,36 @@
         IMP originalImp = method_getImplementation(originalMethod);
         IMP swizzledImp = method_getImplementation(swizzledMethod);
 
-        class_replaceMethod(class,
-                swizzledSelector,
-                originalImp,
-                method_getTypeEncoding(originalMethod));
-        class_replaceMethod(class,
-                originalSelector,
-                swizzledImp,
-                method_getTypeEncoding(originalMethod));
-
+        class_replaceMethod(class, swizzledSelector, originalImp, method_getTypeEncoding(originalMethod));
+        class_replaceMethod(class, originalSelector, swizzledImp, method_getTypeEncoding(originalMethod));
     });
-    
-    
 }
-
-#pragma mark - Method Swizzling
 
 - (void)xxx_didMoveToWindow {
     [self xxx_didMoveToWindow];
     NSString * class = NSStringFromClass([self class]);
     if ([class hasPrefix: @"KlarnaMobileSDK"]) {
-        RCTLogWarn([NSString stringWithFormat: @"==================================\n    %@\n    did move to window\n    %@", self, self.window]);
+        NSString* log = @"==================================================";
+        
+        log = [log stringByAppendingString: [NSString stringWithFormat: @"\n K- %@ did move to window %@", self, self.window]];
         
         if (self.window == nil) {
             NSArray *syms = [NSThread  callStackSymbols];
             if ([syms count] > 1) {
                 for (int i = 0; i < [syms count]; i++) {
-                    RCTLogWarn(@"<%@ %p> %@ - caller: %@ ", [self class], self, NSStringFromSelector(_cmd), [syms objectAtIndex:i]);
+                    log = [log stringByAppendingString:[NSString stringWithFormat: @"\n -- <%@ %p> %@ - caller: %@ ", [self class], self, NSStringFromSelector(_cmd), [syms objectAtIndex:i]]];
                 }
             } else {
-                RCTLogWarn(@"<%@ %p> %@", [self class], self, NSStringFromSelector(_cmd));
+                log = [log stringByAppendingString:[NSString stringWithFormat:@"\n -- <%@ %p> %@", [self class], self, NSStringFromSelector(_cmd)]];;
             }
         }
+        RCTLogWarn(log);
     }
 }
 
 @end
 
-
+#pragma mark - Intercept Klarna events
 
 @implementation NSURLSession (Analytics)
 
@@ -90,33 +84,26 @@
         IMP originalImp = method_getImplementation(originalMethod);
         IMP swizzledImp = method_getImplementation(swizzledMethod);
 
-        class_replaceMethod(class,
-                swizzledSelector,
-                originalImp,
-                method_getTypeEncoding(originalMethod));
-        class_replaceMethod(class,
-                originalSelector,
-                swizzledImp,
-                method_getTypeEncoding(originalMethod));
-
+        class_replaceMethod(class, swizzledSelector, originalImp, method_getTypeEncoding(originalMethod));
+        class_replaceMethod(class, originalSelector, swizzledImp, method_getTypeEncoding(originalMethod));
     });
-    
-    
 }
-
-#pragma mark - Method Swizzling
 
 - (NSURLSessionDataTask *)xxx_dataTaskWithRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler {
     NSURL* url = request.URL;
     if (url != nil && ([url.absoluteString.lowercaseString rangeOfString: @"klarna"].location != NSNotFound)) {
-        RCTLogWarn(@"==================================================");
-        RCTLogWarn([NSString stringWithFormat: @"Request to %@", url]);
+        NSString* log = @"==================================================";
+        
+        log = [log stringByAppendingString: [NSString stringWithFormat: @"\n K- request to %@", url]];
         
         NSData* body = request.HTTPBody;
+        
         if (body != nil) {
             NSString* dataString = [[NSString alloc] initWithData: body encoding: NSUTF8StringEncoding];
-            RCTLogWarn([NSString stringWithFormat: @"Data: %@", dataString]);
+            log = [log stringByAppendingString: [NSString stringWithFormat: @"\n -- data: %@", dataString]];
         }
+        
+        RCTLogWarn(log);
     }
     return [self xxx_dataTaskWithRequest: request completionHandler: completionHandler];
 }
@@ -131,13 +118,13 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        RCTLogWarn(@"View at %p initialized.", &self);
+        RCTLogWarn(@"==================================================\n K- View at %p initialized.", &self);
     }
     return self;
 }
 
 - (void) dealloc {
-    RCTLogWarn(@"View at %p dealloced.", &self);
+    RCTLogWarn(@"==================================================\n K- View at %p dealloced.", &self);
     
 //    void *addr[2];
 //    int nframes = backtrace(addr, sizeof(addr)/sizeof(*addr));
